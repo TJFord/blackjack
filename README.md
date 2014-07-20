@@ -3,7 +3,7 @@ The player has a split option at the beginning of the hand
 when both cards have the same value.
 Other options include Hit, Stand, Double down, and Surrender.
 Created by Jifu Tan
-jit310@lehigh.edu
+jit310'@'lehigh.edu
 07/20/2014
 
 At the beginning, the player has 100 chips.
