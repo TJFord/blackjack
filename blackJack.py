@@ -112,7 +112,7 @@ class Deck:
 
 #define deal process
 def deal():
-  global bet, chips
+  global chips
   print 'Now you have %d chips' %chips
   deck = Deck()
   while True:
@@ -143,38 +143,47 @@ def deal():
     while True:
       flag = raw_input('Do you want to split(y/n)? ')
       if flag == 'y':
-        print 'Split it into two hands. Now it is hand 1'
-        player = Hand()
-        player.add_card(card1)
-        player.add_card(deck.deal_card())
-        print "Your hands: " + redStr(player) 
-        print "Dealer's shown card: " + greenStr(shownCard)
-        dealNoSplit(player,dealer,deck)
+        if 2*bet > chips:
+          print 'You can not split, because you do not have enough chips'
+        else:
+          print 'Split it into two hands. Now it is hand 1'
+          player = Hand()
+          player.add_card(card1)
+          player.add_card(deck.deal_card())
+          print "Your hands: " + redStr(player) 
+          print "Dealer's shown card: " + greenStr(shownCard)
+          dealNoSplit(player,dealer,deck,bet)
 
-        print 'Let us move to hand 2'
-        player = Hand()
-        dealer = Hand()
-        player.add_card(card2)
-        shownCard = deck.deal_card()
-        dealer.add_card(shownCard)
-        player.add_card(deck.deal_card())
-        dealer.add_card(deck.deal_card())
-        print "Your hands: " + redStr(player) 
-        print "Dealer's shown card: " + greenStr(shownCard)
-        dealNoSplit(player,dealer,deck)
-        break
+          # only allowed to play hand 2 if the player 
+          # has enough chips
+          if chips >= bet:
+            print 'Let us move to hand 2'
+            player = Hand()
+            dealer = Hand()
+            player.add_card(card2)
+            shownCard = deck.deal_card()
+            dealer.add_card(shownCard)
+            player.add_card(deck.deal_card())
+            dealer.add_card(deck.deal_card())
+            print "Your hands: " + redStr(player) 
+            print "Dealer's shown card: " + greenStr(shownCard)
+            dealNoSplit(player,dealer,deck,bet)
+          else:
+            print 'Not enough chips to play hand 2\n'+\
+                'The bet is %d, you only have %d chips left' %(bet, chips)
+          break
       elif flag =='n':
-        dealNoSplit(player,dealer,deck)
+        dealNoSplit(player,dealer,deck,bet)
         break
       else:
         print 'Wrong input, Please choose y/n'
   else:
-    dealNoSplit(player,dealer,deck)
+    dealNoSplit(player,dealer,deck,bet)
 
 # deal such that player cannot split hands again
 # player only have options Hit, Stand, Surrender, Double down
-def dealNoSplit(player,dealer,deck):
-  global bet,chips
+def dealNoSplit(player,dealer,deck,bet):
+  global chips
 
   # wait for player's decision
   while True:
@@ -188,12 +197,15 @@ def dealNoSplit(player,dealer,deck):
       if player.get_value() > 21:
         break
     elif option == 'd':
-      player.add_card(deck.deal_card())
-      print "Your hands: " + redStr(player) 
-      bet *= 2
-      print 'bet doubled, now it is %f' %bet
-      if player.get_value() > 21:
-        break
+      if 2*bet > chips :
+        print 'You do not have enough chips to double down'
+      else:
+        player.add_card(deck.deal_card())
+        print "Your hands: " + redStr(player) 
+        bet *= 2
+        print 'bet doubled, now it is %f' %bet
+        if player.get_value() > 21:
+          break
     elif option == 'sr':
       bet *= 0.5
       print 'bet half, now it is %f' %bet
@@ -235,7 +247,6 @@ def dealNoSplit(player,dealer,deck):
 # main function 
 if __name__ == '__main__':
   chips = 100  # total chips
-  bet = 0 # bet value
   
   while True:
     deal() # main engine
