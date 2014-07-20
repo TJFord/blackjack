@@ -191,12 +191,12 @@ def dealNoSplit(player,dealer,deck,bet):
       break
     
     option = raw_input('Hit(h),Stand(s),Surrender(sr),Double(d)? ')
-    if option == 'h':
+    if option == 'h': # Hit
       player.add_card(deck.deal_card())
       print "Your hands: " + redStr(player) 
       if player.get_value() > 21:
         break
-    elif option == 'd':
+    elif option == 'd': # Double down
       if 2*bet > chips :
         print 'You do not have enough chips to double down'
       else:
@@ -206,11 +206,11 @@ def dealNoSplit(player,dealer,deck,bet):
         print 'bet doubled, now it is %f' %bet
         if player.get_value() > 21:
           break
-    elif option == 'sr':
+    elif option == 'sr': # Surrender
       bet *= 0.5
       print 'bet half, now it is %f' %bet
       break
-    elif option == 's':
+    elif option == 's': # Stand
       break
     else:
       print 'Wrong input! Please type those letters shown in the brackets'
